@@ -13,17 +13,16 @@ class GCN(nn.Module):
         self.act2 = nn.Softmax
         self.drop1 = nn.Dropout(p=drop_rate)
         self.drop2 = nn.Dropout(p=drop_rate)
+
     def forward(self, A, X):
         temp = self.drop1(X)
         temp = torch.sparse.mm(A, temp)
-        #temp = torch.mm(A, X)
         temp = self.lin1(temp)
         temp = self.act1(temp)
         temp = self.drop2(temp)
         temp = torch.sparse.mm(A, temp)
         temp = self.lin2(temp)
 
-        #output = self.act2(temp)
         output = temp
         return output
 
@@ -35,11 +34,8 @@ class GCN2(nn.Module):
         init_range = np.sqrt(6.0/(dim_hd+dim_ot))
         l2 = torch.DoubleTensor(dim_hd, dim_ot).uniform_(-init_range, init_range)
 
-        #self.lin1 = nn.Linear(dim_ft, dim_hd)
         self.lin1 = Parameter(l1)
         self.b1 = Parameter(torch.zeros(dim_hd))
-        print(self.b1)
-        #self.lin2 = nn.Linear(dim_hd, dim_ot)
         self.lin2 = Parameter(l2)
         self.b2 = Parameter(torch.zeros(dim_ot))
         self.act1 = nn.ReLU()
@@ -51,15 +47,11 @@ class GCN2(nn.Module):
         temp = self.drop1(X)
         temp = torch.add(torch.mm(X, self.lin1) , self.b1)
         temp = torch.sparse.mm(A, temp) 
-        #temp = torch.mm(A, X)
-        #temp = self.lin1(temp)
         temp = self.act1(temp)
         temp = self.drop2(temp)
         temp = torch.add(torch.mm(temp, self.lin2) , self.b2)
         temp = torch.sparse.mm(A, temp)
-        #temp = self.lin2(temp)
 
-        #output = self.act2(temp)
         output = temp
         return output
 

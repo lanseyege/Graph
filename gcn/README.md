@@ -7,6 +7,10 @@ Re-implemented for paper [Semi-Supervised Classification with Graph Convolutiona
 |---------------|--------|------|------|
 |Renormalization|66.0    |74.1  |76.3  |
 
+## Runing code
+python train.py --dataset cora --epoch 200  
+
+
 ## Parameters
 Keep same as the original paper 
 
